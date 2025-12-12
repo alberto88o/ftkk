@@ -147,7 +147,7 @@ body{
 
 /* tagline under brand */
 .brand .tag {
-  font-size: 13px;
+  font-size: 100px;
   font-weight: 500;
   color: #dcdcdc;         /* lighter color for subtitle */
 }
@@ -168,20 +168,20 @@ body{
 
 /* ===== Product card title & description ===== */
 .card h3 {
-  font-size: 16px;        /* name size */
+  font-size: 100px;        /* name size */
   font-weight: 700;       /* name weight */
   color: #111111;         /* name color */
 }
 
 .card p {
-  font-size: 13px;        /* description size */
+  font-size: 100px;        /* description size */
   font-weight: 400;       /* description weight */
   color: #666666;         /* description color */
 }
 
 /* ===== Price styling ===== */
 .price-row strong {
-  font-size: 16px;        /* price size */
+  font-size: 100px;        /* price size */
   font-weight: 800;       /* price bold */
   color: #0b74de;         /* price color (makes it pop) */
 }
