@@ -140,7 +140,7 @@ body{
   
 .brand h1 {
   font-size: 20px;        /* change size: larger = bigger number */
-  font-weight: 800;       /* change boldness: 400 normal, 700 bold, 800 extra-bold */
+  font-weight: 1000;       /* change boldness: 400 normal, 700 bold, 800 extra-bold */
   color: #ffffff;         /* heading color (hex) */
   letter-spacing: 0.5px;  /* small spacing between letters */
 }
