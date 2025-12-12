@@ -5,7 +5,7 @@ const PRODUCTS = [
   { id: "p2", name: "Chennai United Away 2023", price: 1399, img: "https://via.placeholder.com/600x400?text=Chennai+United+Away" },
   { id: "p3", name: "Kerala Blasters Retro", price: 1699, img: "https://via.placeholder.com/600x400?text=Kerala+Blasters+Retro" },
   { id: "p4", name: "India National 2022 Replica", price: 1599, img: "https://via.placeholder.com/600x400?text=India+National" },
-  { id: "p5", name: "Barcelona Style Replica", price: 1899, img: "https://via.placeholder.com/600x400?text=Barcelona+Replica" }
+  { id: "p5", name: "varca Style Replica", price: 1899, img: "https://via.placeholder.com/600x400?text=Barcelona+Replica" }
 ];
 
 const $ = sel => document.querySelector(sel);
