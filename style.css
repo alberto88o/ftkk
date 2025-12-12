@@ -135,4 +135,83 @@ body{
   .header-actions{width:100%;justify-content:space-between}
   .cart-drawer{width:100%}
   .products-grid{grid-template-columns:repeat(1,1fr)}
+  /* ===== Customize header (brand) ===== */
+.brand h1 {
+  font-size: 28px;        /* change size: larger = bigger number */
+  font-weight: 800;       /* change boldness: 400 normal, 700 bold, 800 extra-bold */
+  color: #ffffff;         /* heading color (hex) */
+  letter-spacing: 0.5px;  /* small spacing between letters */
+}
+
+/* tagline under brand */
+.brand .tag {
+  font-size: 13px;
+  font-weight: 500;
+  color: #dcdcdc;         /* lighter color for subtitle */
+}
+
+/* ===== Navigation links ===== */
+.main-nav a {
+  color: #e8d6ff;         /* link color */
+  font-weight: 600;
+  margin-right: 14px;
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.main-nav a:hover {
+  color: #ffdd57;         /* hover color */
+  text-decoration: underline;
+}
+
+/* ===== Product card title & description ===== */
+.card h3 {
+  font-size: 16px;        /* name size */
+  font-weight: 700;       /* name weight */
+  color: #111111;         /* name color */
+}
+
+.card p {
+  font-size: 13px;        /* description size */
+  font-weight: 400;       /* description weight */
+  color: #666666;         /* description color */
+}
+
+/* ===== Price styling ===== */
+.price-row strong {
+  font-size: 16px;        /* price size */
+  font-weight: 800;       /* price bold */
+  color: #0b74de;         /* price color (makes it pop) */
+}
+
+/* ===== Product image size and border ===== */
+.card .thumb {
+  height: 260px;          /* increase or decrease the image height */
+  background-size: cover; /* ensure full cover */
+  background-position: center;
+  border-left: 6px solid #000;   /* example "bond" (left border) - change or remove */
+  border-radius: 12px 12px 0 0;  /* rounded corners on top */
+}
+
+/* If you prefer a thin outline around image */
+.card .thumb.outline {
+  border: 2px solid #ddd; 
+}
+
+/* ===== Buttons (change color) ===== */
+.add-btn {
+  background: #007bff;    /* button background color */
+  color: #fff;            /* button text color */
+  font-weight: 700;
+}
+
+.add-btn:hover { opacity: .95; transform: translateY(-1px); }
+
+/* ===== Responsive tweaks (smaller screens) ===== */
+@media (max-width: 720px) {
+  .brand h1 { font-size: 20px; }
+  .main-nav a { font-size: 14px; }
+  .card .thumb { height: 200px; }
+}
+
 }
