@@ -1,7 +1,7 @@
 /* script.js - simple product rendering + cart (localStorage) */
 
 const PRODUCTS = [
-  { id: "p1", name: "Mumbai FC 2024 Home Jersey", price: 1299, img: "https://via.placeholder.com/600x400?text=Mumbai+FC+Home" },
+  { id: "p1", name: "Mumbai FC 2024 Home Jersey", price: 1299, img: "https://raw.githubusercontent.com/alberto88o/ftkk/refs/heads/main/Screenshot%202025-12-12%20155416.png" },
   { id: "p2", name: "Chennai United Away 2023", price: 1399, img: "https://via.placeholder.com/600x400?text=Chennai+United+Away" },
   { id: "p3", name: "Kerala Blasters Retro", price: 1699, img: "https://via.placeholder.com/600x400?text=Kerala+Blasters+Retro" },
   { id: "p4", name: "India National 2022 Replica", price: 1599, img: "https://via.placeholder.com/600x400?text=India+National" },
