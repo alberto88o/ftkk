@@ -29,6 +29,76 @@
 </header>
 
 <main class="container">
+  <!-- UPI / GPay quick-pay -->
+<section id="upi-pay" style="max-width:720px;margin-top:18px">
+  <h3>Pay with UPI / GPay</h3>
+  <p>Click the button below on your phone to open Google Pay or another UPI app with the payment details prefilled.</p>
+
+  <!-- Update the values below: pa (VPA), pn (payee name), am (amount in rupees), tn (note) -->
+  <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+    <button id="gpay-btn" class="primary-btn" style="min-width:220px">Pay with GPay / UPI</button>
+
+    <!-- QR fallback: auto-generate QR from UPI URI so desktop users can scan -->
+    <div id="upi-qr" style="padding:8px;background:#fff;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,.06)">
+      <img id="qr-img" alt="UPI QR" src="" style="width:150px;height:150px" />
+      <div style="font-size:13px;text-align:center;margin-top:6px">Scan to pay (UPI)</div>
+    </div>
+  </div>
+
+  <p style="margin-top:8px;color:#666;font-size:13px">Note: This is a client-side UPI link — works on mobile and opens the UPI app. For production payment verification, use a server-side gateway (Razorpay/Cashfree).</p>
+</section>
+
+<script>
+/* Quick UPI / GPay client-side behavior */
+/* Replace these variables with your values */
+const merchantVPA = 'yourmerchant@upi';     // <-- put your UPI ID here (example: merchant@okaxis)
+const merchantName = 'FOOBLITZ';            // <-- display name
+const paymentNote = 'FOOBLITZ order';       // <-- note/description
+
+function formatPriceNumber(x){ return Number(x).toFixed(2); }
+
+// build UPI URI - we set amount dynamically from cart total if available
+function buildUpiUri(amount) {
+  // amount must be in rupees like 1999.00
+  const pa = encodeURIComponent(merchantVPA);
+  const pn = encodeURIComponent(merchantName);
+  const am = encodeURIComponent(formatPriceNumber(amount));
+  const tn = encodeURIComponent(paymentNote);
+  return `upi://pay?pa=${pa}&pn=${pn}&am=${am}&tn=${tn}&cu=INR`;
+}
+
+// If you have a cart total from localStorage:
+function getCartTotal() {
+  try{
+    const cart = JSON.parse(localStorage.getItem('fs_cart')||'{}');
+    return Object.values(cart).reduce((s,i)=> s + (i.price * i.qty || 0), 0);
+  }catch(e){ return 0; }
+}
+
+// when user clicks "Pay with GPay"
+document.getElementById('gpay-btn').addEventListener('click', ()=>{
+  const total = getCartTotal();
+  if(total <= 0){
+    alert('Your cart is empty. Add items first.');
+    return;
+  }
+  // build upi uri with total
+  const upi = buildUpiUri(total);
+  // set location to UPI URI — opens the UPI app on mobile
+  window.location.href = upi;
+});
+
+// generate QR for desktop users (Google Chart API quick QR)
+function setUpiQR(){
+  const total = getCartTotal();
+  const upi = buildUpiUri(total);
+  // Use a simple QR service — this creates a QR image of the UPI URI
+  const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' + encodeURIComponent(upi);
+  document.getElementById('qr-img').src = qrUrl;
+}
+setUpiQR();
+</script>
+
   <h2>Checkout / Payment</h2>
 
   <div id="payment-area">
