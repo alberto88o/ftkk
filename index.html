@@ -1,42 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Free Website</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FootShop — Football Jerseys</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <h1>FootShop</h1>
+        <p class="tag">Official & Replica Jerseys</p>
+      </div>
 
-    <header>
-        <h1>My Free Website</h1>
-        <nav>
-            <a href="#home">Home</a>
-            <a href="#about">About</a>
-            <a href="#contact">Contact</a>
-        </nav>
-    </header>
+      <div class="header-actions">
+        <input id="search" type="search" placeholder="Search jerseys, team or year..." />
+        <select id="sort">
+          <option value="default">Sort: Featured</option>
+          <option value="price-asc">Price ▲</option>
+          <option value="price-desc">Price ▼</option>
+          <option value="name-asc">Name A→Z</option>
+        </select>
 
-    <section id="home" class="section">
-        <h2>Welcome!</h2>
-        <p>This is my completely free website made with HTML and CSS.</p>
+        <button id="cart-btn" class="cart-btn">
+          Cart <span id="cart-count">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="products" class="products-grid" aria-live="polite">
+      <!-- Products will be inserted here by script.js -->
     </section>
+  </main>
 
-    <section id="about" class="section">
-        <h2>About Me</h2>
-        <p>I created this website using GitHub Pages for free.</p>
-    </section>
+  <!-- Cart Drawer -->
+  <aside id="cart-drawer" class="cart-drawer">
+    <div class="cart-header">
+      <h2>Your Cart</h2>
+      <button id="close-cart" class="close-btn">✕</button>
+    </div>
+    <div id="cart-items" class="cart-items">
+      <!-- cart items -->
+    </div>
+    <div class="cart-footer">
+      <div class="total-line"><span>Total:</span><strong id="cart-total">₹0</strong></div>
+      <button id="checkout" class="primary-btn">Checkout</button>
+    </div>
+  </aside>
 
-    <section id="contact" class="section">
-        <h2>Contact</h2>
-        <p>Email: myemail@example.com</p>
-    </section>
+  <!-- Product Modal -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-dialog">
+      <button id="modal-close" class="close-btn">✕</button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
 
-    <footer>
-        <p>© 2025 My Website. All rights reserved.</p>
-    </footer>
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2025 FootShop. Built with ❤️</p>
+    </div>
+  </footer>
 
+  <script src="script.js"></script>
 </body>
 </html>
+
 
 
