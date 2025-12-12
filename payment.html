@@ -5,6 +5,17 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>FootShop — Payment</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* small local styles for payment page components */
+    #payment-area{max-width:900px;margin:18px auto}
+    #upi-section{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+    #upi-qr{padding:8px;background:#fff;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,.06);display:flex;flex-direction:column;align-items:center}
+    #upi-qr img{width:170px;height:170px;object-fit:contain}
+    .summary-row{padding:10px 0;border-bottom:1px solid #f0f0f0}
+    .primary-btn{background:#0b74de;color:#fff;padding:10px 14px;border-radius:8px;border:0;cursor:pointer}
+    .secondary-btn{background:#eee;border:0;padding:8px 10px;border-radius:8px;cursor:pointer}
+    .muted{color:#666;font-size:14px}
+  </style>
 </head>
 <body>
 
@@ -29,97 +40,51 @@
 </header>
 
 <main class="container">
-  <!-- UPI / GPay quick-pay -->
-<section id="upi-pay" style="max-width:720px;margin-top:18px">
-  <h3>Pay with UPI / GPay</h3>
-  <p>Click the button below on your phone to open Google Pay or another UPI app with the payment details prefilled.</p>
-
-  <!-- Update the values below: pa (VPA), pn (payee name), am (amount in rupees), tn (note) -->
-  <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
-    <button id="gpay-btn" class="primary-btn" style="min-width:220px">Pay with GPay / UPI</button>
-
-    <!-- QR fallback: auto-generate QR from UPI URI so desktop users can scan -->
-    <div id="upi-qr" style="padding:8px;background:#fff;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,.06)">
-      <img id="qr-img" alt="UPI QR" src="" style="width:150px;height:150px" />
-      <div style="font-size:13px;text-align:center;margin-top:6px">Scan to pay (UPI)</div>
-    </div>
-  </div>
-
-  <p style="margin-top:8px;color:#666;font-size:13px">Note: This is a client-side UPI link — works on mobile and opens the UPI app. For production payment verification, use a server-side gateway (Razorpay/Cashfree).</p>
-</section>
-
-<script>
-/* Quick UPI / GPay client-side behavior */
-/* Replace these variables with your values */
-const merchantVPA = 'yourmerchant@upi';     // <-- put your UPI ID here (example: merchant@okaxis)
-const merchantName = 'FOOBLITZ';            // <-- display name
-const paymentNote = 'FOOBLITZ order';       // <-- note/description
-
-function formatPriceNumber(x){ return Number(x).toFixed(2); }
-
-// build UPI URI - we set amount dynamically from cart total if available
-function buildUpiUri(amount) {
-  // amount must be in rupees like 1999.00
-  const pa = encodeURIComponent(merchantVPA);
-  const pn = encodeURIComponent(merchantName);
-  const am = encodeURIComponent(formatPriceNumber(amount));
-  const tn = encodeURIComponent(paymentNote);
-  return `upi://pay?pa=${pa}&pn=${pn}&am=${am}&tn=${tn}&cu=INR`;
-}
-
-// If you have a cart total from localStorage:
-function getCartTotal() {
-  try{
-    const cart = JSON.parse(localStorage.getItem('fs_cart')||'{}');
-    return Object.values(cart).reduce((s,i)=> s + (i.price * i.qty || 0), 0);
-  }catch(e){ return 0; }
-}
-
-// when user clicks "Pay with GPay"
-document.getElementById('gpay-btn').addEventListener('click', ()=>{
-  const total = getCartTotal();
-  if(total <= 0){
-    alert('Your cart is empty. Add items first.');
-    return;
-  }
-  // build upi uri with total
-  const upi = buildUpiUri(total);
-  // set location to UPI URI — opens the UPI app on mobile
-  window.location.href = upi;
-});
-
-// generate QR for desktop users (Google Chart API quick QR)
-function setUpiQR(){
-  const total = getCartTotal();
-  const upi = buildUpiUri(total);
-  // Use a simple QR service — this creates a QR image of the UPI URI
-  const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' + encodeURIComponent(upi);
-  document.getElementById('qr-img').src = qrUrl;
-}
-setUpiQR();
-</script>
-
   <h2>Checkout / Payment</h2>
 
   <div id="payment-area">
-    <p id="no-items">Loading your cart...</p>
-
-    <div id="summary" style="display:none;max-width:700px">
-      <div id="summary-list"></div>
-      <div style="margin-top:16px;font-weight:700">Total: <span id="summary-total">₹0</span></div>
-
-      <div style="margin-top:18px">
-        <button id="do-checkout" class="primary-btn">Confirm & Place Order (Demo)</button>
-      </div>
-
-      <div style="margin-top:12px;color:#666">
-        <p>Payment options (demo): Cash on Delivery (COD) or contact us to pay via UPI/Bank transfer.</p>
-      </div>
+    <!-- Cart summary -->
+    <div id="cart-summary" style="background:#fff;padding:16px;border-radius:10px;box-shadow:0 6px 18px rgba(2,6,23,0.04);margin-bottom:18px">
+      <h3>Your order</h3>
+      <div id="summary-list" style="margin-top:8px"></div>
+      <div style="margin-top:12px;font-weight:700">Total: <span id="summary-total">₹0</span></div>
+      <p id="no-items" class="muted" style="display:none;margin-top:8px">Your cart is empty. Add items from the Products page.</p>
     </div>
 
-    <div id="thankyou" style="display:none;margin-top:20px">
+    <!-- UPI / GPay quick-pay -->
+    <section id="upi-section" style="margin-bottom:18px">
+      <div style="flex:1;min-width:260px">
+        <h3>Pay with UPI / GPay</h3>
+        <p class="muted">Open Google Pay, PhonePe or another UPI app on mobile — or scan the QR from desktop.</p>
+
+        <div style="display:flex;gap:10px;align-items:center;margin-top:8px">
+          <button id="gpay-btn" class="primary-btn">Pay with GPay / UPI</button>
+          <button id="refresh-qr" class="secondary-btn">Refresh QR</button>
+        </div>
+
+        <p id="upi-warn" style="color:#b33;margin-top:8px;display:none">UPI ID not configured. Edit payment.html to set your UPI VPA.</p>
+      </div>
+
+      <div id="upi-qr" style="min-width:190px">
+        <img id="qr-img" alt="UPI QR" src="" />
+        <div style="font-size:13px;text-align:center;margin-top:6px">Scan to pay (UPI)</div>
+      </div>
+    </section>
+
+    <!-- Razorpay demo button (optional) -->
+    <div style="margin-top:12px">
+      <h3>Pay with Razorpay (Demo)</h3>
+      <p class="muted">Optional client-side demo checkout — replace RAZORPAY_TEST_KEY with your test key to try.</p>
+      <button id="razorpay-btn" class="primary-btn">Pay with Razorpay (Demo)</button>
+    </div>
+
+    <div style="margin-top:18px">
+      <button id="do-checkout" class="primary-btn">Confirm & Place Order (Demo)</button>
+    </div>
+
+    <div id="thankyou" style="display:none;margin-top:20px;background:#fff;padding:12px;border-radius:8px">
       <h3>Thank you — order placed!</h3>
-      <p>We cleared the demo cart. For real payment integration, we can add Razorpay or PayPal.</p>
+      <p class="muted">We cleared the demo cart. For production payments we can integrate Razorpay server-side or another gateway for verification.</p>
     </div>
   </div>
 </main>
@@ -130,51 +95,199 @@ setUpiQR();
   </div>
 </footer>
 
+<!-- RAZORPAY (optional) -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<!-- Full payment script: UPI + cart summary + Razorpay demo -->
 <script>
-  // Reads the same cart key used by the store (fs_cart)
-  function formatPrice(n){ return '₹' + Number(n).toLocaleString(); }
-  const cart = JSON.parse(localStorage.getItem('fs_cart') || '{}');
+/* ====== CONFIG: set your details here ====== */
+const merchantVPA = "robyjaison@oksbi";   // <<-- REPLACE: example alberto@ybl
+const merchantName = "FOOBLITZ STORE";
+const paymentNote = "FootShop order";
+const RAZORPAY_TEST_KEY = "rzp_test_KEY_HERE"; // <<-- optional: replace with your test key for Razorpay demo
+
+/* ====== HELPERS ====== */
+function formatPrice(n){ return '₹' + Number(n).toLocaleString(); }
+function formatPriceNumber(x){ return Number(x).toFixed(2); }
+
+function buildUpiUri(amount){
+  const pa = encodeURIComponent(merchantVPA);
+  const pn = encodeURIComponent(merchantName);
+  const am = encodeURIComponent(formatPriceNumber(amount));
+  const tn = encodeURIComponent(paymentNote);
+  return `upi://pay?pa=${pa}&pn=${pn}&am=${am}&tn=${tn}&cu=INR`;
+}
+function buildQrUri(upiUri){
+  return "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(upiUri);
+}
+
+/* ====== CART READ & RENDER ====== */
+function getCartObj(){
+  try { return JSON.parse(localStorage.getItem('fs_cart') || '{}'); }
+  catch(e){ console.error('cart parse error', e); return {}; }
+}
+
+function getCartTotal(){
+  const cart = getCartObj();
+  return Object.values(cart).reduce((s,it)=> s + (Number(it.price||0) * Number(it.qty||0)), 0);
+}
+
+function renderSummary(){
+  const cart = getCartObj();
   const keys = Object.keys(cart);
-  const summary = document.getElementById('summary');
   const summaryList = document.getElementById('summary-list');
   const summaryTotal = document.getElementById('summary-total');
   const noItems = document.getElementById('no-items');
-
+  summaryList.innerHTML = '';
   if(keys.length === 0){
-    noItems.textContent = 'Your cart is empty. Add products from the Products page.';
+    noItems.style.display = 'block';
+    summaryTotal.textContent = formatPrice(0);
+    return;
+  }
+  noItems.style.display = 'none';
+  let total = 0;
+  keys.forEach(k=>{
+    const it = cart[k];
+    total += Number(it.price||0) * Number(it.qty||0);
+    const row = document.createElement('div');
+    row.className = 'summary-row';
+    row.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><div>
+      <div style="font-weight:700">${it.name}</div>
+      <div class="muted" style="font-size:13px">${it.size ? 'Size: '+it.size : ''}</div>
+    </div><div style="text-align:right">
+      <div style="font-weight:700">${formatPrice(Number(it.price||0)*Number(it.qty||0))}</div>
+      <div class="muted" style="font-size:13px">${it.qty} × ${formatPrice(it.price)}</div>
+    </div></div>`;
+    summaryList.appendChild(row);
+  });
+  summaryTotal.textContent = formatPrice(total);
+}
+
+/* ====== UPI / QR LOGIC ====== */
+function updateUpiElements(){
+  const total = getCartTotal();
+  const gpayBtn = document.getElementById('gpay-btn');
+  const qrImg = document.getElementById('qr-img');
+  const upiWarn = document.getElementById('upi-warn');
+
+  if(!merchantVPA || merchantVPA === "YOUR_UPI_ID_HERE"){
+    // disable
+    if(gpayBtn) gpayBtn.disabled = true;
+    if(qrImg) qrImg.src = '';
+    if(upiWarn) upiWarn.style.display = 'block';
+    return;
   } else {
-    noItems.style.display = 'none';
-    summary.style.display = 'block';
-    let total = 0;
-    keys.forEach(id=>{
-      const it = cart[id];
-      const line = document.createElement('div');
-      line.style.padding = '8px 0';
-      line.innerHTML = `<strong>${it.name}</strong> — ${formatPrice(it.price)} × ${it.qty} = <strong>${formatPrice(it.price*it.qty)}</strong>`;
-      summaryList.appendChild(line);
-      total += it.price * it.qty;
-    });
-    summaryTotal.textContent = formatPrice(total);
+    if(gpayBtn) gpayBtn.disabled = false;
+    if(upiWarn) upiWarn.style.display = 'none';
   }
 
-  document.getElementById('do-checkout').addEventListener('click', ()=>{
-    if(keys.length === 0){ alert('Cart is empty'); return; }
-    // Demo behaviour: clear the cart and show thank you
-    localStorage.removeItem('fs_cart');
-    summary.style.display = 'none';
-    document.getElementById('thankyou').style.display = 'block';
-    // update cart count in header if user returns (script.js will update on other pages)
-    document.getElementById('cart-count').textContent = 0;
+  if(total <= 0){
+    if(gpayBtn) gpayBtn.textContent = 'Cart is empty — add items';
+    if(qrImg) qrImg.src = '';
+    return;
+  }
+
+  const upi = buildUpiUri(total);
+  if(gpayBtn) gpayBtn.textContent = `Pay ${formatPriceNumber(total)} with GPay / UPI`;
+  if(qrImg) qrImg.src = buildQrUri(upi);
+}
+
+/* ====== RAZORPAY DEMO ====== */
+function openRazorpayDemo(){
+  const cart = getCartObj();
+  const keys = Object.keys(cart);
+  if(keys.length === 0){ alert('Cart is empty'); return; }
+  const amount = Math.round(getCartTotal() * 100); // paise
+
+  if(!RAZORPAY_TEST_KEY || RAZORPAY_TEST_KEY === 'rzp_test_KEY_HERE'){
+    alert('Razorpay test key not configured (this is optional). You can still use the UPI button.');
+    return;
+  }
+
+  const options = {
+    key: RAZORPAY_TEST_KEY,
+    amount: amount,
+    currency: "INR",
+    name: merchantName,
+    description: "FootShop order (demo)",
+    handler: function(response){
+      // Demo: clear cart after successful demo payment
+      localStorage.removeItem('fs_cart');
+      renderSummary();
+      updateCartCount();
+      document.getElementById('thankyou').style.display = 'block';
+      alert('Payment success (demo). Payment id: ' + (response && response.razorpay_payment_id));
+    },
+    prefill: { name: "", email: "" },
+    theme: { color: "#0b74de" }
+  };
+  const rzp = new Razorpay(options);
+  rzp.open();
+}
+
+/* ====== CART COUNT UPDATE (header) ====== */
+function updateCartCount(){
+  try{
+    const cart = getCartObj();
+    const count = Object.values(cart).reduce((s,i)=> s + (i.qty||0), 0);
+    const el = document.getElementById('cart-count');
+    if(el) el.textContent = count;
+  }catch(e){}
+}
+
+/* ====== INIT & EVENT HANDLERS ====== */
+document.addEventListener('DOMContentLoaded', function(){
+  renderSummary();
+  updateCartCount();
+  updateUpiElements();
+
+  // UPI button click opens UPI intent
+  const gpayBtn = document.getElementById('gpay-btn');
+  if(gpayBtn) gpayBtn.addEventListener('click', function(){
+    const total = getCartTotal();
+    if(total <= 0){ alert('Your cart is empty. Add items first.'); return; }
+    if(!merchantVPA || merchantVPA === "YOUR_UPI_ID_HERE"){ alert('UPI ID not configured in payment.html'); return; }
+    const upi = buildUpiUri(total);
+    // open intent (on mobile will open the UPI app)
+    window.location.href = upi;
   });
 
-  // small hook to open cart drawer if present (for consistency)
-  const cartBtn = document.getElementById('cart-btn');
-  if(cartBtn) cartBtn.addEventListener('click', ()=> {
-    const drawer = document.getElementById('cart-drawer');
-    if(drawer) drawer.classList.add('open');
+  // refresh QR button
+  const refreshBtn = document.getElementById('refresh-qr');
+  if(refreshBtn) refreshBtn.addEventListener('click', updateUpiElements);
+
+  // razorpay demo button
+  const rzBtn = document.getElementById('razorpay-btn');
+  if(rzBtn) rzBtn.addEventListener('click', openRazorpayDemo);
+
+  // Confirm & Place Order (demo)
+  const doCheckout = document.getElementById('do-checkout');
+  if(doCheckout) doCheckout.addEventListener('click', function(){
+    const cart = getCartObj();
+    if(Object.keys(cart).length === 0){ alert('Cart is empty'); return; }
+    // Demo: clear cart and show thank you
+    localStorage.removeItem('fs_cart');
+    renderSummary();
+    updateCartCount();
+    document.getElementById('thankyou').style.display = 'block';
+    alert('Order placed (demo). We cleared the cart.');
   });
+
+  // Poll localStorage for changes (simple) to update summary/QR when cart changes on other pages
+  let last = localStorage.getItem('fs_cart') || '{}';
+  setInterval(function(){
+    const cur = localStorage.getItem('fs_cart') || '{}';
+    if(cur !== last){
+      last = cur;
+      renderSummary();
+      updateCartCount();
+      updateUpiElements();
+    }
+  }, 700);
+});
 </script>
 
 </body>
 </html>
+
 
