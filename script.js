@@ -1,11 +1,11 @@
 /* script.js - simple product rendering + cart (localStorage) */
 
 const PRODUCTS = [
-  { id: "p1", name: "Mumbai FC 2024 Home Jersey", price: 1299, img: "https://raw.githubusercontent.com/alberto88o/ftkk/refs/heads/main/Screenshot%202025-12-12%20155416.png" },
-  { id: "p2", name: "mancher United Away 2023", price: 1399, img: "https://via.placeholder.com/600x400?text=Chennai+United+Away" },
-  { id: "p3", name: "real Blasters Retro", price: 1699, img: "https://via.placeholder.com/600x400?text=Kerala+Blasters+Retro" },
-  { id: "p4", name: "aaaa National 2022 Replica", price: 1599, img: "https://via.placeholder.com/600x400?text=India+National" },
-  { id: "p5", name: "varca Style Replica", price: 1899, img: "https://via.placeholder.com/600x400?text=Barcelona+Replica" }
+  { id: "p1", name: "Mumbai FC 2024 Home Jersey", price: 12, img: "https://raw.githubusercontent.com/alberto88o/ftkk/refs/heads/main/Screenshot%202025-12-12%20155416.png" },
+  { id: "p2", name: "mancher United Away 2023", price: 13, img: "https://via.placeholder.com/600x400?text=Chennai+United+Away" },
+  { id: "p3", name: "real Blasters Retro", price: 16, img: "https://via.placeholder.com/600x400?text=Kerala+Blasters+Retro" },
+  { id: "p4", name: "aaaa National 2022 Replica", price: 15, img: "https://via.placeholder.com/600x400?text=India+National" },
+  { id: "p5", name: "varca Style Replica", price: 18, img: "https://via.placeholder.com/600x400?text=Barcelona+Replica" }
 ];
 
 const $ = sel => document.querySelector(sel);
